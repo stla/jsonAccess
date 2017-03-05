@@ -19,6 +19,15 @@
 .jsonElemAt_ifArray <- function(json, index){
   .C("jsonElemAt_ifArrayR", json=json, index=index, result="")$result
 }
+.jsonElemAt_ifString <- function(json, index){
+  .C("jsonElemAt_ifStringR", json=json, index=index, result="")$result
+}
+.jsonElemAt_ifBool <- function(json, index){
+  .C("jsonElemAt_ifBoolR", json=json, index=index, result="")$result
+}
+.jsonMembers <- function(json){
+  .C("jsonMembersR", json=json, result="")$result
+}
 
 
 #' @importFrom magrittr %>%
@@ -207,6 +216,84 @@ jsonElemAt_ifArray <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
     json <- jsonlite::toJSON(json)
   }
   out <- .jsonElemAt_ifArray(json=as.character(json), index=as.integer(index))
+  if(fromJSON){
+    out <- jsonlite::fromJSON(out)
+  }
+  return(out)
+}
+
+#' Extract a string from a JSON array
+#' @description Returns the string in a JSON array by giving its index;
+#' returns \code{"null"} if there is no string at this index.
+#' @param json JSON string
+#' @param index integer
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @param fromJSON logical, whether to apply \code{\link[jsonlite]{fromJSON}} to
+#' the output
+#' @return A JSON string if \code{fromJSON=FALSE}, a R object if \code{fromJSON=TRUE}.
+#' @export
+#' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
+#' @examples
+#' json <- "[1,\"hello\",null,\"bird\"]"
+#' jsonElemAt_ifString(json, 1)
+#' jsonElemAt_ifString(json, 0) == "null"
+jsonElemAt_ifString <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonElemAt_ifString(json=as.character(json), index=as.integer(index))
+  if(fromJSON){
+    out <- jsonlite::fromJSON(out)
+  }
+  return(out)
+}
+
+#' Extract a Boolean from a JSON array
+#' @description Returns the Boolean in a JSON array by giving its index;
+#' returns \code{"null"} if there is no Boolean at this index.
+#' @param json JSON string
+#' @param index integer
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @param fromJSON logical, whether to apply \code{\link[jsonlite]{fromJSON}} to
+#' the output
+#' @return A JSON string if \code{fromJSON=FALSE}, a R object if \code{fromJSON=TRUE}.
+#' @export
+#' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
+#' @examples
+#' json <- "[1,true,null,\"bird\"]"
+#' jsonElemAt_ifBool(json, 1)
+#' jsonElemAt_ifBool(json, 0) == "null"
+jsonElemAt_ifBool <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonElemAt_ifBool(json=as.character(json), index=as.integer(index))
+  if(fromJSON){
+    out <- jsonlite::fromJSON(out)
+  }
+  return(out)
+}
+
+#' Members of a JSON string
+#' @description Returns the members of a JSON string as a JSON string array.
+#' @param json JSON string
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @param fromJSON logical, whether to apply \code{\link[jsonlite]{fromJSON}} to
+#' the output
+#' @return A JSON string if \code{fromJSON=FALSE}, a R object if \code{fromJSON=TRUE}.
+#' @export
+#' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
+#' @examples
+#' json <- "{\"a\":{\"b\":8,\"c\":[1,2]},\"b\":[10,11]}"
+#' jsonMembers(json)
+jsonMembers <- function(json, toJSON=FALSE, fromJSON=FALSE){
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonMembers(json=as.character(json))
   if(fromJSON){
     out <- jsonlite::fromJSON(out)
   }
