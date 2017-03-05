@@ -4,6 +4,13 @@
 library(jsonAccess)
 ```
 
+Assume you have the following JSON string:
+
+```
+json <- "{\"a\": {\"b\": 8, \"c\": [1,2]}, \"b\": [10.14, 11.618]}"
+```
+
+
 ```
 json <- 
 "{

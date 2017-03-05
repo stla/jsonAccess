@@ -4,3 +4,5 @@ man
 ztests.R
 inst/libs
 .Rproj.user
+README.html
+README.Rmd
