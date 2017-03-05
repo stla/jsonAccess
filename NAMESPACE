@@ -3,6 +3,7 @@
 export("%>%")
 export(jsonAccess)
 export(jsonElemAt)
+export(jsonElemAt_ifArray)
 export(jsonElemAt_ifNumber)
 export(jsonElemAt_ifObject)
 export(jsonElemsAt)

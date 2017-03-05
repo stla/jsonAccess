@@ -16,6 +16,9 @@
 .jsonElemAt_ifObject <- function(json, index){
   .C("jsonElemAt_ifObjectR", json=json, index=index, result="")$result
 }
+.jsonElemAt_ifArray <- function(json, index){
+  .C("jsonElemAt_ifArrayR", json=json, index=index, result="")$result
+}
 
 
 #' @importFrom magrittr %>%
@@ -45,7 +48,7 @@ magrittr::`%>%`
 #' # get the result as a R object:
 #' jsonAccess(json, c("a","c"), fromJSON=TRUE)
 #' # same as:
-#' jsonAccess(json, c("a","c")) %>% jsonlite::fromJSON
+#' jsonAccess(json, c("a","c")) %>% jsonlite::fromJSON(.)
 #' @note Instaed of using the option \code{toJSON=TRUE}, you can apply
 #' \code{\link[jsonlite]{toJSON}} before; this allows you to apply it
 #' with its options. Same remark for the option \code{toJSON=FALSE}.
@@ -168,7 +171,7 @@ jsonElemAt_ifNumber <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
 #' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
 #' @examples
 #' json <- "[1,0,{},null,\"bird\"]"
-#' jsonElemAt_ifObject(json, 2) == "{}"
+#' jsonElemAt_ifObject(json, 2)
 #' jsonElemAt_ifObject(json, 1) == "null"
 #' jsonElemAt_ifObject(json, 3)
 jsonElemAt_ifObject <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
@@ -176,6 +179,34 @@ jsonElemAt_ifObject <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
     json <- jsonlite::toJSON(json)
   }
   out <- .jsonElemAt_ifObject(json=as.character(json), index=as.integer(index))
+  if(fromJSON){
+    out <- jsonlite::fromJSON(out)
+  }
+  return(out)
+}
+
+#' Extract an array from a JSON array
+#' @description Returns the array in a JSON array by giving its index;
+#' returns \code{"null"} if there is no array at this index.
+#' @param json JSON string
+#' @param index integer
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @param fromJSON logical, whether to apply \code{\link[jsonlite]{fromJSON}} to
+#' the output
+#' @return A JSON string if \code{fromJSON=FALSE}, a R object if \code{fromJSON=TRUE}.
+#' @export
+#' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
+#' @examples
+#' json <- "[1,[{},2],null,\"bird\"]"
+#' jsonElemAt_ifArray(json, 2)
+#' jsonElemAt_ifArray(json, 1) == "null"
+#' jsonElemAt_ifArray(json, 3)
+jsonElemAt_ifArray <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonElemAt_ifArray(json=as.character(json), index=as.integer(index))
   if(fromJSON){
     out <- jsonlite::fromJSON(out)
   }
