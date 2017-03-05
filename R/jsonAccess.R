@@ -13,6 +13,10 @@
 .jsonElemAt_ifNumber <- function(json, index){
   .C("jsonElemAt_ifNumberR", json=json, index=index, result="")$result
 }
+.jsonElemAt_ifObject <- function(json, index){
+  .C("jsonElemAt_ifObjectR", json=json, index=index, result="")$result
+}
+
 
 #' @importFrom magrittr %>%
 #' @export
@@ -144,6 +148,34 @@ jsonElemAt_ifNumber <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
     json <- jsonlite::toJSON(json)
   }
   out <- .jsonElemAt_ifNumber(json=as.character(json), index=as.integer(index))
+  if(fromJSON){
+    out <- jsonlite::fromJSON(out)
+  }
+  return(out)
+}
+
+#' Extract an object from a JSON array
+#' @description Returns the object in a JSON array by giving its index;
+#' returns \code{"null"} if there is no object at this index.
+#' @param json JSON string
+#' @param index integer
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @param fromJSON logical, whether to apply \code{\link[jsonlite]{fromJSON}} to
+#' the output
+#' @return A JSON string if \code{fromJSON=FALSE}, a R object if \code{fromJSON=TRUE}.
+#' @export
+#' @seealso \code{\link{jsonElemAt}}, \code{\link{jsonAccess}}
+#' @examples
+#' json <- "[1,0,{},null,\"bird\"]"
+#' jsonElemAt_ifObject(json, 2) == "{}"
+#' jsonElemAt_ifObject(json, 1) == "null"
+#' jsonElemAt_ifObject(json, 3)
+jsonElemAt_ifObject <- function(json, index, toJSON=FALSE, fromJSON=FALSE){
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonElemAt_ifObject(json=as.character(json), index=as.integer(index))
   if(fromJSON){
     out <- jsonlite::fromJSON(out)
   }
