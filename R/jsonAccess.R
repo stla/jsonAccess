@@ -28,6 +28,9 @@
 .jsonMembers <- function(json){
   .C("jsonMembersR", json=json, result="")$result
 }
+.jsonPretty <- function(json, indent, numformat){
+  .C("jsonPrettyR", json=json, indent=indent, format=numformat, result="")$result
+}
 
 
 #' @importFrom magrittr %>%
@@ -297,5 +300,40 @@ jsonMembers <- function(json, toJSON=FALSE, fromJSON=FALSE){
   if(fromJSON){
     out <- jsonlite::fromJSON(out)
   }
+  return(out)
+}
+
+#' Pretty JSON string
+#' @description Returns a JSON string in pretty format.
+#'
+#' @param json JSON string
+#' @param indent indentation per level of nesting; choices are
+#' \code{"indent0"} (remove \strong{all} white spaces), \code{"indent1"},
+#' \code{"indent2"}, \code{"indent3"}, \code{"indent3"}, and
+#' \code{"tab"} (tabulation)
+#' @param numformat number format; choices are:
+#' \itemize{
+#'      \item \code{"generic"}: integer literals for integers (1, 2, ...),
+#'      simple decimals for fractional values between 0.1 and 9999999,
+#'      and scientific notation otherwise
+#'      \item \code{"decimal"}: standard decimal notation
+#'      \item \code{"scientific"}: scientific notation
+#' }
+#' @param toJSON logical, whether to apply \code{\link[jsonlite]{toJSON}} to
+#' the input
+#' @return A JSON string.
+#' @export
+#' @examples
+#' json <- "{\"a\": {\"b\": 8, \"c\": [1,2]}, \"b\": [10.14, 11.618]}"
+#' jsonPretty(json) %>% cat
+#' jsonPretty(json, indent="indent0") %>% cat
+#' jsonPretty(json, indent="tab", numformat="scientific") %>% cat
+jsonPretty <- function(json, indent="indent2", numformat="generic", toJSON=FALSE){
+  indent <- match.arg(indent, choices=c("indent0", "indent1", "indent2", "indent3", "indent4", "tab"))
+  numformat <- match.arg(numformat, choices=c("generic", "scientific", "decimal"))
+  if(toJSON){
+    json <- jsonlite::toJSON(json)
+  }
+  out <- .jsonPretty(json=as.character(json), indent=indent, numformat=numformat)
   return(out)
 }
