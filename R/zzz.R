@@ -1,11 +1,11 @@
 .onLoad <- function(libname, pkgname) {
-  library.dynam("HSdll", pkgname, libname)
+  library.dynam("JsonAccessR", pkgname, libname)
   .C("HsStart")
   invisible()
 }
 
 .onUnLoad <- function(libpath) {
-  library.dynam.unload("HSdll", libpath)
+  library.dynam.unload("JsonAccessR", libpath)
   invisible()
 }
 

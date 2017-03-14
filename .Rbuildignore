@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-ztests.R
-.Rhistory
-README.html
-README.Rmd
+^ztests.R$
+^\.Rhistory$
+^README.html$
+^README.Rmd$

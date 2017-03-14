@@ -1,8 +1,7 @@
 .Rhistory
 inst/doc
-man
 ztests.R
-inst/libs
+*.dll
 .Rproj.user
 README.html
 README.Rmd

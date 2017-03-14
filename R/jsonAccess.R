@@ -1,4 +1,4 @@
-#' @useDynLib HSdll
+#' @useDynLib JsonAccessR
 .jsonAccess <- function(json, path){
   .C("jsonAccessR", json=json, path=path,
      lpath=length(path), result="")$result

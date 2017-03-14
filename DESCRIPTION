@@ -1,18 +1,18 @@
 Package: jsonAccess
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Access Elements in JSON Strings
+Version: 0.1.1
+Date: 2017-03-13
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@yahoo.fr>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: GPL-3
+Description: Access directly to values and array elements in a JSON string.
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
     jsonlite,
     magrittr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
